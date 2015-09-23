@@ -47,8 +47,8 @@ console.log(Str); // => hello world_Filter
 
 *例如：需要在页面中显示`<script>alert(1);</script>` 直接使用<%= 变量 %>会发现页面会执行次内容。如果使用<%- 变量 %>会对内容进行转义。在页面中是不会执行此内容，而是原原本本的在页面中输出。*
 ```js
-var str = '<script>alert(1);</script>'
-str = yunCloud(str);
+var str = '<%- <script>alert(1);</script> %>'
+str = yunCloud(str)();
 document.getElementById('ele').innerHTML = str;
 // 页面未弹出1
 ```

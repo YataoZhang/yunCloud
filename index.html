@@ -5,11 +5,11 @@
     <title></title>
     <script type="text/javascript" src="./yunCloud.js"></script>
     <script>
-        var str = 'hello <%= name|funcs %>';
-        yunCloud.register('funcs', function (data) {
-            return data + 'register';
+        var str = 'hello <%= name|Filter %>';
+        yunCloud.register('Filter', function (data) {
+            return data + '__register';
         });
-        var test = yunCloud(str, {name: 'tasdfasdf'});
+        var test = yunCloud(str, {name: 'world'});
 
         var jsonData = {
             linkList: [

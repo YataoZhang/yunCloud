@@ -52,11 +52,18 @@ str = yunCloud(str);
 document.getElementById('ele').innerHTML = str;
 // 页面未弹出1
 ```
+##### | <%& javascript变量 %>
+此命令会原样输出javascript变量
+```js
+var tpl = '<% var name = "hello" %><div><%& name %></div>';
+
+yunCloud(tpl)();
+```
 ##### | <% javascript逻辑代码 %>
 ```js
 var tpl = [
     '<% for(var i = 0;i<10;i++) {%>',
-      '<div>这是第<% i %>个div</div>'
+      '<div>这是第<%& i %>个div</div>',
     '<% } %>'
   ].join('');
   

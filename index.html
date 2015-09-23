@@ -9,7 +9,7 @@
         yunCloud.register('Filter', function (data) {
             return data + '__register';
         });
-        var test = yunCloud(str, {name: 'world'});
+        var test1 = yunCloud(str, {name: 'world'});
 
         var jsonData = {
             linkList: [
@@ -34,7 +34,15 @@
 
         yunCloud.register('linkFilter', linkFilter);
 
-        yunCloud(tpl, jsonData);
+        var test2 = yunCloud(tpl, jsonData);
+
+        var _tpl = [
+            '<% for(var i = 0;i<10;i++) {%>',
+            '<div>这是第<%& i %>个div</div>',
+            '<% } %>'
+        ].join('');
+
+        var test3 = yunCloud(_tpl)();
     </script>
 </head>
 <body>

@@ -1,7 +1,7 @@
 /**
  * Created by zhangyatao on 15/9/23.
  */
- !function (base) {
+  !function (base) {
             if ("object" == typeof exports && "undefined" != typeof module) {
                 module.exports = base();
             } else if ("function" == typeof define && define.amd) {
@@ -53,34 +53,63 @@
                         }
                     },
                     matchReg: /^([\S\s]+?)(|\|([\S\s]+))$/,
+                    convert: /<%-([\S\s]+?)%>/g,
+                    val: /<%&([\S\s]+?)%>/g,
+                    origin: /<%=([\S\s]+?)%>/g,
+                    expression: /<%([\s\S]+?)%>/g,
                     render: function (str) {
-                        var tpl = str.replace(/\n/g, '\\n')
-                                .replace(/<%-([\S\s]+?)%>/g, function (match, code) {
-                                    return '+ transfer("encode","' + code + '")+';
-                                }).replace(/<%&([\S\s]+?)%>/g, function (match, code) {
-                                    return '\'+ ' + code + '+\'';
-                                }).replace(/<%=([\S\s]+?)%>/g, function (match, code) {
-                                    if (/\|/.test(code = code.trim())) {
-                                        var funcName = code.match(util.matchReg);
-                                        return '\'+ (' + (event[funcName[3]] || util.noop).toString() + ')(' + funcName[1] + ') +\''
-                                    } else {
-                                        return '\'+' + code + '+\'';
-                                    }
-                                }).replace(/<%([\s\S]+?)%>/g, function (match, code) {
-                                    return '\';\n' + code + '\ntpl+=\'';
-                                }).replace(/\'\n/g, '\'')
-                                .replace(/\n\'/gm, '\'');
-                        tpl = 'tpl=\'' + tpl + '\';';
-                        tpl = tpl.replace(/''/g, '\'\\n\'');
-                        tpl = 'var tpl=\'\';\nwith(obj||{}){\n' + tpl + '\n}\nreturn tpl;';
+                        var tpl = str.replace(/\n/g, '\\n');
+                        if (util.convert.test(str)) {
+                            tpl = tpl.replace(util.convert, function (match, code) {
+                                return ' + transfer("encode","' + code + '") + ';
+                            });
+                        }
+                        if (util.val.test(str)) {
+                            tpl = tpl.replace(util.val, function (match, code) {
+                                return '\'+ ' + code + '+\'';
+                            });
+                        }
+                        if (util.origin.test(str)) {
+                            tpl = tpl.replace(util.origin, function (match, code) {
+                                if (/\|/.test(code = code.trim())) {
+                                    var funcName = code.match(util.matchReg);
+                                    return '\'+ (' + (event[funcName[3]] || util.noop).toString() + ')(' + funcName[1] + ') +\''
+                                } else {
+                                    return '\'+' + code + '+\'';
+                                }
+                            })
+                        }
+                        if (util.expression.test(str)) {
+                            tpl = tpl.replace(util.expression, function (match, code) {
+                                return '\');\n' + code + '\ntpl.push(\'';
+                            });
+                        }
+                        tpl = tpl.replace(/\'\n/g, '\'').replace(/\n\'/gm, '\'');
+                        tpl = 'tpl.push(\'' + tpl + '\');';
+                        tpl = tpl.replace(/tpl.push\((''|'[\\n\s]+)'\);/g, '');
+                        tpl = 'var tpl=[];\nwith(obj||{}){\n' + tpl + '\n}\nreturn tpl.join(\'\');';
                         return new Function('obj', 'transfer', tpl);
                     }
                 };
 
+                var LimitableMap = function () {
+                    this.map = {};
+                };
+                LimitableMap.prototype.set = function (len, text, value) {
+                    (this.map[len] = this.map[len] || {})[text] = value;
+                };
+                LimitableMap.prototype.get = function (len) {
+                    return this.map[len] || {};
+                };
+
+                var pool = new LimitableMap();
                 return {
                     template: function (temp) {
-                        var tpl = util.render(temp);
-                        console.log(tpl);
+                        var tpl = pool.get(temp.length)[temp];
+                        if (!tpl) {
+                            tpl = util.render(temp);
+                            pool.set(temp.length, temp, tpl);
+                        }
                         return function (obj) {
                             return tpl(obj, transfer);
                         }

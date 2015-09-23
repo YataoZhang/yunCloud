@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script type="text/javascript" src="./yunCloud.js"></script>
+    <script>
+        var str = 'hello <%= name|funcs %>';
+        yunCloud.register('funcs', function (data) {
+            return data + 'register';
+        });
+        var test = yunCloud(str, {name: 'tasdfasdf'});
+
+        var jsonData = {
+            linkList: [
+                {href: 'http://www.baidu.com', alt: '百度一下'},
+                {href: 'http://pan.baidu.com', alt: '百度网盘'},
+                {href: 'http://yun.baidu.com', alt: '百度云'}
+            ]
+        };
+
+        var tpl = [
+            '<ul>',
+            '<% for(var i=0,len=linkList.length;i<len;i++){ %>',
+            '<% var val = linkList[i]; %>',
+            '<li><%= val|linkFilter %></li>',
+            '<% } %>',
+            '</ul>'
+        ].join('');
+
+        var linkFilter = function (data) {
+            return '<a href="' + data.href + '" alt="' + data.alt + '" />';
+        };
+
+        yunCloud.register('linkFilter', linkFilter);
+
+        yunCloud(tpl, jsonData);
+    </script>
+</head>
+<body>
+
+</body>
+</html>

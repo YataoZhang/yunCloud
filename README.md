@@ -4,7 +4,7 @@ yunCloud
 ## yunCloud中文文档 
 *一个轻量级的js前端模版库*
 
-`yunCloud` 是一个高效、轻量`[压缩和只有不到1k]`、兼容`javascript`逻辑语法的前端 (Javascript) 模板引擎，使用 `yunCloud` 可以是你的代码实现数据和视图模型的分离(MVC)。 除此之外，它还可以在 `Node.js` 环境中运行（正在测试中）。
+`yunCloud` 是一个高效、轻量`[压缩和只有2k]`、兼容`javascript`逻辑语法的前端 (Javascript) 模板引擎，使用 `yunCloud` 可以是你的代码实现数据和视图模型的分离(MVC)。 除此之外，它还可以在 `Node.js` 环境中运行（正在测试中）。
 
 你可以在遵守 MIT Licence 的前提下随意使用并分发它。yunCloud 代码完全开源并托管在 Github 上。
 

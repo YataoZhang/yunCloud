@@ -96,4 +96,21 @@ var linkFilter = function (data) {
 yunCloud.register('linkFilter', linkFilter);
 
 yunCloud(tpl, jsonData);
+
+// 
+
+```
+上面的方法会生成如下的`html`。接下来就可以按照开发者的应用场景进行更灵活的开发。
+```html
+<ul>
+  <li>
+    <a href="http://www.baidu.com" alt="百度一下" />
+  </li>
+  <li>
+    <a href="http://pan.baidu.com" alt="百度网盘" />
+  </li>
+  <li>
+    <a href="http://yun.baidu.com" alt="百度云" />
+  </li>
+</ul>
 ```

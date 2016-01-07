@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Yuncloud.GitHub.io by YataoZhang</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Yuncloud.GitHub.io</h1>
+      <h2 class="project-tagline">一个轻量级的js前端模版库</h2>
+      <a href="https://github.com/YataoZhang/yuncloud.github.io" class="btn">View on GitHub</a>
+      <a href="https://github.com/YataoZhang/yuncloud.github.io/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/YataoZhang/yuncloud.github.io/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="yuncloud" class="anchor" href="#yuncloud" aria-hidden="true"><span class="octicon octicon-link"></span></a>yunCloud</h1>
+
+<h2>
+<a id="yuncloud中文文档" class="anchor" href="#yuncloud%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3" aria-hidden="true"><span class="octicon octicon-link"></span></a>yunCloud中文文档</h2>
+
+<p><em>一个轻量级的js前端模版库</em></p>
+
+<p><code>yunCloud</code> 是一个高效、轻量<code>[压缩完只有2k]</code>、兼容<code>javascript</code>逻辑语法的前端 (Javascript) 模板引擎，使用 <code>yunCloud</code> 可以是你的代码实现数据和视图模型的分离(MVC)。 除此之外，它还可以在 <code>Node.js</code> 环境中运行（正在测试中）。</p>
+
+<p>你可以在遵守 MIT Licence 的前提下随意使用并分发它。yunCloud 代码完全开源并托管在 Github 上。</p>
+
+<h3>
+<a id="yuncloud的引入" class="anchor" href="#yuncloud%E7%9A%84%E5%BC%95%E5%85%A5" aria-hidden="true"><span class="octicon octicon-link"></span></a>yunCloud的引入</h3>
+
+<div class="highlight highlight-text-html-basic"><pre><span class="pl-s1">  &lt;<span class="pl-ent">script</span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>text/javascript<span class="pl-pds">"</span></span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>yunCloud.js<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;</span></pre></div>
+
+<h3>
+<a id="-使用方法" class="anchor" href="#-%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95" aria-hidden="true"><span class="octicon octicon-link"></span></a>* 使用方法</h3>
+
+<h5>
+<a id="-编译模板并根据所给的数据立即渲染出结果" class="anchor" href="#-%E7%BC%96%E8%AF%91%E6%A8%A1%E6%9D%BF%E5%B9%B6%E6%A0%B9%E6%8D%AE%E6%89%80%E7%BB%99%E7%9A%84%E6%95%B0%E6%8D%AE%E7%AB%8B%E5%8D%B3%E6%B8%B2%E6%9F%93%E5%87%BA%E7%BB%93%E6%9E%9C" aria-hidden="true"><span class="octicon octicon-link"></span></a>| 编译模板并根据所给的数据立即渲染出结果.</h5>
+
+<div class="highlight highlight-source-js"><pre> <span class="pl-k">var</span> tpl <span class="pl-k">=</span> <span class="pl-en">yunCloud</span>(tpl, data);</pre></div>
+
+<h5>
+<a id="-仅编译模版暂不渲染它会返回一个可重用的编译后的函数" class="anchor" href="#-%E4%BB%85%E7%BC%96%E8%AF%91%E6%A8%A1%E7%89%88%E6%9A%82%E4%B8%8D%E6%B8%B2%E6%9F%93%E5%AE%83%E4%BC%9A%E8%BF%94%E5%9B%9E%E4%B8%80%E4%B8%AA%E5%8F%AF%E9%87%8D%E7%94%A8%E7%9A%84%E7%BC%96%E8%AF%91%E5%90%8E%E7%9A%84%E5%87%BD%E6%95%B0" aria-hidden="true"><span class="octicon octicon-link"></span></a>| 仅编译模版暂不渲染，它会返回一个可重用的编译后的函数.</h5>
+
+<div class="highlight highlight-source-js"><pre> <span class="pl-k">var</span> template_String <span class="pl-k">=</span> <span class="pl-en">yunCloud</span>(tpl);
+ <span class="pl-c">// 根据Data渲染得到html</span>
+ <span class="pl-en">template_String</span>(data);</pre></div>
+
+<h5>
+<a id="-注册注销自定义函数实现angularjs中的过滤器在下边--变量--中会有实例" class="anchor" href="#-%E6%B3%A8%E5%86%8C%E6%B3%A8%E9%94%80%E8%87%AA%E5%AE%9A%E4%B9%89%E5%87%BD%E6%95%B0%E5%AE%9E%E7%8E%B0angularjs%E4%B8%AD%E7%9A%84%E8%BF%87%E6%BB%A4%E5%99%A8%E5%9C%A8%E4%B8%8B%E8%BE%B9--%E5%8F%98%E9%87%8F--%E4%B8%AD%E4%BC%9A%E6%9C%89%E5%AE%9E%E4%BE%8B" aria-hidden="true"><span class="octicon octicon-link"></span></a>| 注册/注销自定义函数，实现angularJS中的过滤器。在下边 &lt;%= 变量 %&gt; 中会有实例。</h5>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">yunCloud</span>.<span class="pl-en">register</span>(<span class="pl-s"><span class="pl-pds">'</span>filterName<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>);
+<span class="pl-smi">yunCloud</span>.<span class="pl-en">unregister</span>(<span class="pl-s"><span class="pl-pds">'</span>filterName<span class="pl-pds">'</span></span>);</pre></div>
+
+<h3>
+<a id="-语法" class="anchor" href="#-%E8%AF%AD%E6%B3%95" aria-hidden="true"><span class="octicon octicon-link"></span></a>* 语法</h3>
+
+<h5>
+<a id="--变量-" class="anchor" href="#--%E5%8F%98%E9%87%8F-" aria-hidden="true"><span class="octicon octicon-link"></span></a>| &lt;%= 变量 %&gt;</h5>
+
+<pre><code>&lt;%= content %&gt;
+&lt;%= content|filter %&gt;
+</code></pre>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> str <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>hello &lt;%= name|filter %&gt;<span class="pl-pds">'</span></span>;
+<span class="pl-smi">yunCloud</span>.<span class="pl-en">register</span>(<span class="pl-s"><span class="pl-pds">'</span>filter<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (<span class="pl-smi">data</span>) {
+    <span class="pl-k">return</span> data <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">'</span>_Filter<span class="pl-pds">'</span></span>;
+});
+<span class="pl-k">var</span> Str <span class="pl-k">=</span> <span class="pl-en">yunCloud</span>(str, {name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>world<span class="pl-pds">'</span></span>});
+<span class="pl-en">console</span>.<span class="pl-c1">log</span>(Str); <span class="pl-c">// =&gt; hello world_Filter</span></pre></div>
+
+<h5>
+<a id="---变量-" class="anchor" href="#---%E5%8F%98%E9%87%8F-" aria-hidden="true"><span class="octicon octicon-link"></span></a>| &lt;%- 变量 %&gt;</h5>
+
+<blockquote>
+<p>这个是为了解决内容转义提供的功能。(此写法不支持Filter过滤器)</p>
+</blockquote>
+
+<p><em>例如：需要在页面中显示<code>&lt;script&gt;alert(1);&lt;/script&gt;</code> 直接使用&lt;%= 变量 %&gt;会发现页面会执行此内容。如果使用&lt;%- 变量 %&gt;会对内容进行转义。在页面中是不会执行此内容，而是原原本本的在页面中输出。</em></p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> str <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>&lt;%- &lt;script&gt;alert(1);&lt;/script&gt; %&gt;<span class="pl-pds">'</span></span>
+str <span class="pl-k">=</span> <span class="pl-en">yunCloud</span>(str)();
+<span class="pl-smi">document</span>.<span class="pl-c1">getElementById</span>(<span class="pl-s"><span class="pl-pds">'</span>ele<span class="pl-pds">'</span></span>).<span class="pl-smi">innerHTML</span> <span class="pl-k">=</span> str;
+<span class="pl-c">// 页面未弹出1</span></pre></div>
+
+<h5>
+<a id="--javascript变量-" class="anchor" href="#--javascript%E5%8F%98%E9%87%8F-" aria-hidden="true"><span class="octicon octicon-link"></span></a>| &lt;%&amp; javascript变量 %&gt;</h5>
+
+<p>此命令会原样输出javascript变量</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> tpl <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>&lt;% var name = "hello" %&gt;&lt;div&gt;&lt;%&amp; name %&gt;&lt;/div&gt;<span class="pl-pds">'</span></span>;
+
+<span class="pl-en">yunCloud</span>(tpl)();</pre></div>
+
+<h5>
+<a id="--javascript逻辑代码-" class="anchor" href="#--javascript%E9%80%BB%E8%BE%91%E4%BB%A3%E7%A0%81-" aria-hidden="true"><span class="octicon octicon-link"></span></a>| &lt;% javascript逻辑代码 %&gt;</h5>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> tpl <span class="pl-k">=</span> [
+    <span class="pl-s"><span class="pl-pds">'</span>&lt;% for(var i = 0;i&lt;10;i++) {%&gt;<span class="pl-pds">'</span></span>,
+      <span class="pl-s"><span class="pl-pds">'</span>&lt;div&gt;这是第&lt;%&amp; i %&gt;个div&lt;/div&gt;<span class="pl-pds">'</span></span>,
+    <span class="pl-s"><span class="pl-pds">'</span>&lt;% } %&gt;<span class="pl-pds">'</span></span>
+  ].<span class="pl-c1">join</span>(<span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>);
+
+<span class="pl-en">yunCloud</span>(tpl);
+</pre></div>
+
+<h5>
+<a id="让我们通过一个例子演示一下自定义函数的奇妙用法吧" class="anchor" href="#%E8%AE%A9%E6%88%91%E4%BB%AC%E9%80%9A%E8%BF%87%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90%E6%BC%94%E7%A4%BA%E4%B8%80%E4%B8%8B%E8%87%AA%E5%AE%9A%E4%B9%89%E5%87%BD%E6%95%B0%E7%9A%84%E5%A5%87%E5%A6%99%E7%94%A8%E6%B3%95%E5%90%A7" aria-hidden="true"><span class="octicon octicon-link"></span></a>让我们通过一个例子演示一下自定义函数的奇妙用法吧.</h5>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> jsonData <span class="pl-k">=</span> {
+    linkList<span class="pl-k">:</span> [
+        {href<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>http://www.baidu.com<span class="pl-pds">'</span></span>, alt<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>百度一下<span class="pl-pds">'</span></span>},
+        {href<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>http://pan.baidu.com<span class="pl-pds">'</span></span>, alt<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>百度网盘<span class="pl-pds">'</span></span>},
+        {href<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>http://yun.baidu.com<span class="pl-pds">'</span></span>, alt<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>百度云<span class="pl-pds">'</span></span>}
+    ]
+};
+
+<span class="pl-k">var</span> tpl <span class="pl-k">=</span> [
+    <span class="pl-s"><span class="pl-pds">'</span>&lt;ul&gt;<span class="pl-pds">'</span></span>,
+        <span class="pl-s"><span class="pl-pds">'</span>&lt;% for(var i=0,len=linkList.length;i&lt;len;i++){ %&gt;<span class="pl-pds">'</span></span>,
+            <span class="pl-s"><span class="pl-pds">'</span>&lt;% var val = linkList[i]; %&gt;<span class="pl-pds">'</span></span>,
+            <span class="pl-s"><span class="pl-pds">'</span>&lt;li&gt;&lt;%= val|linkFilter %&gt;&lt;/li&gt;<span class="pl-pds">'</span></span>,
+        <span class="pl-s"><span class="pl-pds">'</span>&lt;% } %&gt;<span class="pl-pds">'</span></span>,
+    <span class="pl-s"><span class="pl-pds">'</span>&lt;/ul&gt;<span class="pl-pds">'</span></span>
+].<span class="pl-c1">join</span>(<span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>);
+
+<span class="pl-k">var</span> <span class="pl-en">linkFilter</span> <span class="pl-k">=</span> <span class="pl-k">function</span> (<span class="pl-smi">data</span>) {
+     <span class="pl-k">return</span> <span class="pl-s"><span class="pl-pds">'</span>&lt;a href="<span class="pl-pds">'</span></span> <span class="pl-k">+</span> <span class="pl-smi">data</span>.<span class="pl-c1">href</span> <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">'</span>" alt="<span class="pl-pds">'</span></span> <span class="pl-k">+</span> <span class="pl-smi">data</span>.<span class="pl-c1">alt</span> <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">'</span>" /&gt;<span class="pl-pds">'</span></span>;
+};
+
+<span class="pl-smi">yunCloud</span>.<span class="pl-en">register</span>(<span class="pl-s"><span class="pl-pds">'</span>linkFilter<span class="pl-pds">'</span></span>, linkFilter);
+
+<span class="pl-en">yunCloud</span>(tpl, jsonData);
+
+<span class="pl-c">// </span>
+</pre></div>
+
+<p>上面的方法会生成如下的<code>html</code>。接下来就可以按照开发者的应用场景进行更灵活的开发。</p>
+
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">ul</span>&gt;
+  &lt;<span class="pl-ent">li</span>&gt;
+    &lt;<span class="pl-ent">a</span> <span class="pl-e">href</span>=<span class="pl-s"><span class="pl-pds">"</span>http://www.baidu.com<span class="pl-pds">"</span></span> <span class="pl-e">alt</span>=<span class="pl-s"><span class="pl-pds">"</span>百度一下<span class="pl-pds">"</span></span> /&gt;
+  &lt;/<span class="pl-ent">li</span>&gt;
+  &lt;<span class="pl-ent">li</span>&gt;
+    &lt;<span class="pl-ent">a</span> <span class="pl-e">href</span>=<span class="pl-s"><span class="pl-pds">"</span>http://pan.baidu.com<span class="pl-pds">"</span></span> <span class="pl-e">alt</span>=<span class="pl-s"><span class="pl-pds">"</span>百度网盘<span class="pl-pds">"</span></span> /&gt;
+  &lt;/<span class="pl-ent">li</span>&gt;
+  &lt;<span class="pl-ent">li</span>&gt;
+    &lt;<span class="pl-ent">a</span> <span class="pl-e">href</span>=<span class="pl-s"><span class="pl-pds">"</span>http://yun.baidu.com<span class="pl-pds">"</span></span> <span class="pl-e">alt</span>=<span class="pl-s"><span class="pl-pds">"</span>百度云<span class="pl-pds">"</span></span> /&gt;
+  &lt;/<span class="pl-ent">li</span>&gt;
+&lt;/<span class="pl-ent">ul</span>&gt;</pre></div>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/YataoZhang/yuncloud.github.io">Yuncloud.GitHub.io</a> is maintained by <a href="https://github.com/YataoZhang">YataoZhang</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>

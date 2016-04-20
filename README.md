@@ -16,17 +16,46 @@ yunCloud
 ##### | 编译模板并根据所给的数据立即渲染出结果.
 ```js
  var tpl = yunCloud(tpl, data);
+  
+ /*
+ *编译出来的的函数为
+ *  var tpl=[];
+ *  with(obj||{}){
+ *  tpl.push(''+ name +'');
+ *  }
+ *  return tpl.join('');
+ */
+```
+##### | 启用变量编译方式,这种方法更加提高性能
+*因为js引擎对with关键字无法做出执行层面的优化.所以这种方式可以避免使用with关键字以提升执行效率.但是要注意使用场景,这种方法不是所有场景都可以使用的.*
+```js
+ var tpl = yunCloud(tpl, data, true);
+ 
+ /*
+ *编译出来的的函数为
+ *  var tpl=[];tpl.push(''+data.name+'');
+ *  return tpl.join('');
+ */
 ```
 ##### | 仅编译模版暂不渲染，它会返回一个可重用的编译后的函数.
 ```js
  var template_String = yunCloud(tpl);
- // 根据Data渲染得到html
- template_String(data);
+ // 根据data渲染得到html
+ var tpl = template_String(data);
+ // 放到指定元素中
+ $('#ele').html(tpl);
 ```
-##### | 注册/注销自定义函数，实现angularJS中的过滤器。在下边 <%= 变量 %> 中会有实例。
+##### | 注册/注销自定义函数，实现angularJS中的过滤器。在下边 &lt;%= 变量 %> 中会有实例。
 ```js
 yunCloud.register('filterName', function);
 yunCloud.unregister('filterName');
+```
+##### | 设置缓存状态。(默认为缓存)
+*默认为缓存,用以提示在浏览器中的执行效率;但是在nodejs等后端环境中内存的合理使用十分重要,稍不留意就可能造成内存泄漏,所以,在nodejs等后端环境中使用模版时推荐关闭缓存.*
+```js
+yunCloud.setCache(false); // 设置为不缓存生成的模版函数
+
+yunCloud.setCache(true);  // 设置为缓存生成的模版函数
 ```
 ### * 语法
 ##### | <%= 变量 %>
@@ -39,7 +68,7 @@ var str = 'hello <%= name|filter %>';
 yunCloud.register('filter', function (data) {
     return data + '_Filter';
 });
-var Str = yunCloud(str, {name: 'world'});
+var Str = yunCloud(str, {name: 'world'}, true);
 console.log(Str); // => hello world_Filter
 ```
 ##### | <%- 变量 %>
@@ -57,7 +86,7 @@ document.getElementById('ele').innerHTML = str;
 ```js
 var tpl = '<% var name = "hello" %><div><%& name %></div>';
 
-yunCloud(tpl)();
+yunCloud(tpl)(); // => <div>hello</div>
 ```
 ##### | <% javascript逻辑代码 %>
 ```js

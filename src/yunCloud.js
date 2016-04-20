@@ -23,31 +23,27 @@
         var decodeCharacterEntities = {
             "&lt;": "<",
             "&gt;": ">",
-            "&amp;": "&",
             "&nbsp;": " ",
-            "&quot;": "\""
+            "&quot;": "\"",
+            "&amp;": "&"
         };
-
         var encodeCharacterEntities = {
+            "&": "&amp;",
             "<": "&lt",
             ">": "&gt;",
-            "&": "&amp;",
             " ": "&nbsp;",
             "\"": "&quot;"
         };
-
-
         var transfer = function (type, str) {
-            var data = null;
             var transferCallback = function (key, value) {
                 str = str.replace(new RegExp(key, 'g'), value);
             };
             if (type === 'encode') {
-                data = util.forIn(encodeCharacterEntities, transferCallback);
+                util.forIn(encodeCharacterEntities, transferCallback);
             } else {
-                data = util.forIn(decodeCharacterEntities, transferCallback);
+                util.forIn(decodeCharacterEntities, transferCallback);
             }
-            return data;
+            return str;
         };
         var util = {
             noop: function (x) {
@@ -65,11 +61,15 @@
             val: /<%&([\S\s]+?)%>/g,
             origin: /<%=([\S\s]+?)%>/g,
             expression: /<%([\s\S]+?)%>/g,
-            render: function (str) {
-                var tpl = str.replace(/\n/g, '\\n');
+            render: function (str, variable) {
+                var parasitic = '';
+                if (variable) {
+                    parasitic = 'data.';
+                }
+                var tpl = str.replace(/\n/g, '\\n').replace(/\'/g, '\\\'');
                 if (util.convert.test(str)) {
                     tpl = tpl.replace(util.convert, function (match, code) {
-                        return ' + transfer("encode","' + code + '") + ';
+                        return '\' + transfer("encode",' + parasitic + code + ') + \'';
                     });
                 }
                 if (util.val.test(str)) {
@@ -79,6 +79,7 @@
                 }
                 if (util.origin.test(str)) {
                     tpl = tpl.replace(util.origin, function (match, code) {
+                        code = parasitic + code;
                         if (/\|/.test(code = code.trim())) {
                             var funcName = code.match(util.matchReg);
                             return '\'+ (' + (event[funcName[3]] || util.noop).toString() + ')(' + funcName[1] + ') +\''
@@ -95,28 +96,37 @@
                 tpl = tpl.replace(/\'\n/g, '\'').replace(/\n\'/gm, '\'');
                 tpl = 'tpl.push(\'' + tpl + '\');';
                 tpl = tpl.replace(/tpl.push\((''|'[\\n\s]+)'\);/g, '');
-                tpl = 'var tpl=[];\nwith(obj||{}){\n' + tpl + '\n}\nreturn tpl.join(\'\');';
-                return new Function('obj', 'transfer', tpl);
+                if (variable) {
+                    tpl = 'var tpl=[];' + tpl + '\nreturn tpl.join(\'\');';
+                } else {
+                    tpl = 'var tpl=[];\nwith(obj||{}){\n' + tpl + '\n}\nreturn tpl.join(\'\');';
+                }
+                var argu = variable ? 'data' : 'obj';
+                return new Function(argu, 'transfer', tpl);
             }
         };
-
         var LimitableMap = function () {
             this.map = {};
         };
         LimitableMap.prototype.set = function (len, text, value) {
-            (this.map[len] = this.map[len] || {})[text] = value;
+            (this.map[len] || ( this.map[len] = {}))[text] = value;
         };
         LimitableMap.prototype.get = function (len) {
             return this.map[len] || {};
         };
-
         var pool = new LimitableMap();
         return {
-            template: function (temp) {
-                var tpl = pool.get(temp.length)[temp];
-                if (!tpl) {
-                    tpl = util.render(temp);
-                    pool.set(temp.length, temp, tpl);
+            isCache: true,
+            template: function (temp, variable) {
+                var tpl = null;
+                if (this.isCache) {
+                    tpl = pool.get(temp.length)[temp];
+                    if (!tpl) {
+                        tpl = util.render(temp, variable);
+                        pool.set(temp.length, temp, tpl);
+                    }
+                } else {
+                    tpl = util.render(temp, variable);
                 }
                 return function (obj) {
                     return tpl(obj, transfer);
@@ -124,20 +134,41 @@
             }
         };
     })();
-
     var event = {};
-
-    var yunCloud = function (str, data) {
+    /**
+     * 编译模版
+     * @param {string} str 模版字符串
+     * @param {Object} data 模版数据
+     * @param {boolean} variable 是否启用变量编译
+     * @returns {*}
+     */
+    var yunCloud = function (str, data, variable) {
         if (arguments.length === 1) {
             return manger.template(str);
         }
-        return manger.template(str)(data);
+        return manger.template(str, variable)(data);
     };
+    /**
+     * 注册过滤器
+     * @param {string} funcName 过滤器名称
+     * @param {Function} callback 回调函数
+     */
     yunCloud.register = function (funcName, callback) {
         event[funcName] = callback;
     };
+    /**
+     * 解除过滤器
+     * @param {string} funcName 过滤器名称
+     */
     yunCloud.unRegister = function (funcName) {
         delete event[funcName];
+    };
+    /**
+     * 设置缓存状态
+     * @param {boolean} isCache 是否缓存生成的模版
+     */
+    yunCloud.setCache = function (isCache) {
+        manger.isCache = !!isCache;
     };
     return yunCloud;
 });

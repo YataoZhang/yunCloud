@@ -15,7 +15,10 @@ yunCloud
 ### * 使用方法
 ##### | 编译模板并根据所给的数据立即渲染出结果.
 ```js
- var tpl = yunCloud(tpl, data);
+yunCloud.set({
+    loose: false
+});
+ var tpl = yunCloud('<%= name %>', {name:"jimmy bobo"});
   
  /*
  *编译出来的的函数为
@@ -26,16 +29,60 @@ yunCloud
  *  return tpl.join('');
  */
 ```
-##### | 启用变量编译方式,这种方法更加提高性能
+##### | 启用宽松编译方式,这种方法更加提高性能(默认)
 *因为js引擎对with关键字无法做出执行层面的优化.所以这种方式可以避免使用with关键字以提升执行效率.但是要注意使用场景,这种方法不是所有场景都可以使用的.*
 ```js
- var tpl = yunCloud(tpl, data, true);
+yunCloud.set({
+    loose: true
+});
+ var tpl = yunCloud('<%= name %>', {name:"jimmy bobo"});
  
  /*
  *编译出来的的函数为
  *  var tpl=[];tpl.push(''+data.name+'');
  *  return tpl.join('');
  */
+```
+
+### WARNING
+*当使用`<% statement %>`语句中需要操作`模版数据`时,需将loose为false*
+```js
+yunCloud.set({
+    loose: false
+});
+var tpl = yunCloud('<% if( name === "jimmy bobo") {%> Passed! <% } %>', {name:"jimmy bobo"});
+ 
+ /*
+ *编译出来的的函数为
+ * var tpl=[];
+ * with(obj||{}){
+ * tpl.push('');
+ * if( name === "jimmy bobo") {
+ * tpl.push(' Passed! ');
+ * } 
+ * tpl.push('');
+ * }
+ * return tpl.join('');
+ */
+ // 输出结果: Passed!
+ 
+ 
+ // 如果将loose设置为true,则会出现下面的异常
+ yunCloud.set({
+     loose: true
+ });
+ var tpl = yunCloud('<% if( name === "jimmy bobo") {%> Passed! <% } %>', {name:"jimmy bobo"});
+  /*
+  *编译出来的的函数为
+  * var tpl=[];tpl.push('');
+  * if( name === "jimmy bobo") {
+  * tpl.push(' Passed! ');
+  * } 
+  * tpl.push('');
+  * return tpl.join('');
+  */
+  
+  // 输出结果: Error: name is not defind
 ```
 ##### | 仅编译模版暂不渲染，它会返回一个可重用的编译后的函数.
 ```js
@@ -45,7 +92,8 @@ yunCloud
  // 放到指定元素中
  $('#ele').html(tpl);
 ```
-##### | 注册/注销自定义函数，实现angularJS中的过滤器。在下边 &lt;%= 变量 %> 中会有实例。
+##### | 注册/注销自定义函数(过滤器)，类似angularJS中的过滤器。在下边 &lt;%= 变量 %> 中会有实例。
+*过滤器只能在`<%= statement %>`语句中使用*
 ```js
 yunCloud.register('filterName', function);
 yunCloud.unregister('filterName');
@@ -53,12 +101,12 @@ yunCloud.unregister('filterName');
 ##### | 设置缓存状态。(默认为缓存)
 *默认为缓存,用以提示在浏览器中的执行效率;但是在nodejs等后端环境中内存的合理使用十分重要,稍不留意就可能造成内存泄漏,所以,在nodejs等后端环境中使用模版时推荐关闭缓存.*
 ```js
-yunCloud.setCache(false); // 设置为不缓存生成的模版函数
+yunCloud.set({cache:false}); // 设置为不缓存生成的模版函数
 
-yunCloud.setCache(true);  // 设置为缓存生成的模版函数
+yunCloud.set({cache:true});  // 设置为缓存生成的模版函数
 ```
 ### * 语法
-##### | <%= 变量 %>
+##### | &lt;%= 变量 %>
 ```
 <%= content %>
 <%= content|filter %>
@@ -96,7 +144,7 @@ var tpl = [
     '<% } %>'
   ].join('');
   
-yunCloud(tpl);
+yunCloud(tpl)(); // => <div>这是第0个div</div><div>这是第1个div</div><div>这是第2个div</div> 
 
 ```
 ##### 让我们通过一个例子演示一下自定义函数的奇妙用法吧.
@@ -125,8 +173,6 @@ var linkFilter = function (data) {
 yunCloud.register('linkFilter', linkFilter);
 
 yunCloud(tpl, jsonData);
-
-// 
 
 ```
 上面的方法会生成如下的`html`。接下来就可以按照开发者的应用场景进行更灵活的开发。
